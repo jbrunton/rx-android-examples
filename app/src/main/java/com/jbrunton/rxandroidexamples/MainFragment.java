@@ -1,5 +1,6 @@
 package com.jbrunton.rxandroidexamples;
 
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import com.trello.rxlifecycle.components.RxFragment;
 
 import java.util.concurrent.TimeUnit;
 
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -20,6 +22,7 @@ import static rx.Observable.interval;
 
 public class MainFragment extends RxFragment {
     private TextView displayCount;
+    private static String TAG = WorkerFragment.class.getName();
 
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -37,7 +40,15 @@ public class MainFragment extends RxFragment {
             }
         });
 
+        view.findViewById(R.id.action_retain).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                countRetain();
+            }
+        });
+
         displayCount = (TextView) view.findViewById(R.id.display_count);
+
+        countRetain();
 
         return view;
     }
@@ -77,5 +88,32 @@ public class MainFragment extends RxFragment {
                         displayCount.setText("Count: " + x);
                     }
                 });
+    }
+
+    private void countRetain() {
+        getObservable()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(this.<Long>bindToLifecycle())
+                .doOnCompleted(new Action0() {
+                    @Override public void call() {
+                        displayCount.setText(getString(R.string.select_button));
+                    }
+                })
+                .subscribe(new Action1<Long>() {
+                    @Override public void call(Long x) {
+                        displayCount.setText("Count: " + x);
+                    }
+                });
+    }
+
+    private Observable<Long> getObservable() {
+        FragmentManager fm = getActivity().getFragmentManager();
+        WorkerFragment frag = (WorkerFragment) fm.findFragmentByTag(TAG);
+        if (frag == null) {
+            frag = new WorkerFragment();
+            fm.beginTransaction().add(frag, TAG).commit();
+        }
+        return frag.getObservable();
     }
 }
