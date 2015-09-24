@@ -35,12 +35,14 @@ public class BaseFragment extends RxFragment {
     }
 
     <T> void bind(Observable<T> observable, Action1<T> onNext, Action0 onCompleted) {
-        observable
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .compose(this.<T>bindToLifecycle())
-                .doOnCompleted(onCompleted)
-                .subscribe(onNext);
+        if (observable != null) {
+            observable
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .compose(this.<T>bindToLifecycle())
+                    .doOnCompleted(onCompleted)
+                    .subscribe(onNext);
+        }
     }
 
     @Override public void onDestroy() {

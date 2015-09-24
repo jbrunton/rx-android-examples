@@ -19,14 +19,12 @@ import static rx.Observable.interval;
 
 public class MainFragment extends BaseFragment {
     private TextView displayCount;
+    private static final String retainObservableId = "retain";
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Observable<Long> observable = fetch("RETAIN");
-        if (observable != null) {
-            bind(observable, onTick, onCompleted);
-        }
+        bind(this.<Long>fetch(retainObservableId), onTick, onCompleted);
     }
 
     @Nullable @Override
@@ -71,7 +69,8 @@ public class MainFragment extends BaseFragment {
     }
 
     private void countRetain() {
-        bind(cache(createTimer(), "RETAIN"), onTick, onCompleted);
+        displayCount.setText("Counting...");
+        bind(cache(createTimer(), retainObservableId), onTick, onCompleted);
     }
 
     private Observable<Long> createTimer() {
