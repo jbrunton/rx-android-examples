@@ -1,14 +1,11 @@
 package com.jbrunton.rxandroidexamples;
 
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.trello.rxlifecycle.components.RxFragment;
 
 import java.util.concurrent.TimeUnit;
 
@@ -20,9 +17,17 @@ import rx.schedulers.Schedulers;
 
 import static rx.Observable.interval;
 
-public class MainFragment extends RxFragment {
+public class MainFragment extends BaseFragment {
     private TextView displayCount;
-    private static String TAG = WorkerFragment.class.getName();
+
+    @Override public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Observable<Long> observable = fetch("RETAIN");
+        if (observable != null) {
+            bind(observable, onTick, onCompleted);
+        }
+    }
 
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,72 +53,41 @@ public class MainFragment extends RxFragment {
 
         displayCount = (TextView) view.findViewById(R.id.display_count);
 
-        countRetain();
-
         return view;
     }
 
     private void countNoUnsubscribe() {
         displayCount.setText("Counting...");
-        interval(1, TimeUnit.SECONDS)
-                .take(10)
+        createTimer()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(new Action0() {
-                    @Override public void call() {
-                        displayCount.setText(getString(R.string.select_button));
-                    }
-                })
-                .subscribe(new Action1<Long>() {
-                    @Override public void call(Long x) {
-                        displayCount.setText("Count: " + x);
-                    }
-                });
+                .doOnCompleted(onCompleted)
+                .subscribe(onTick);
     }
 
     private void countUnsubscribe() {
         displayCount.setText("Counting...");
-        interval(1, TimeUnit.SECONDS)
-                .take(10)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .compose(this.<Long>bindToLifecycle())
-                .doOnCompleted(new Action0() {
-                    @Override public void call() {
-                        displayCount.setText(getString(R.string.select_button));
-                    }
-                })
-                .subscribe(new Action1<Long>() {
-                    @Override public void call(Long x) {
-                        displayCount.setText("Count: " + x);
-                    }
-                });
+        bind(createTimer(), onTick, onCompleted);
     }
 
     private void countRetain() {
-        getObservable()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .compose(this.<Long>bindToLifecycle())
-                .doOnCompleted(new Action0() {
-                    @Override public void call() {
-                        displayCount.setText(getString(R.string.select_button));
-                    }
-                })
-                .subscribe(new Action1<Long>() {
-                    @Override public void call(Long x) {
-                        displayCount.setText("Count: " + x);
-                    }
-                });
+        bind(cache(createTimer(), "RETAIN"), onTick, onCompleted);
     }
 
-    private Observable<Long> getObservable() {
-        FragmentManager fm = getActivity().getFragmentManager();
-        WorkerFragment frag = (WorkerFragment) fm.findFragmentByTag(TAG);
-        if (frag == null) {
-            frag = new WorkerFragment();
-            fm.beginTransaction().add(frag, TAG).commit();
-        }
-        return frag.getObservable();
+    private Observable<Long> createTimer() {
+        return interval(1, TimeUnit.SECONDS)
+                .take(20);
     }
+
+    private final Action1<Long> onTick = new Action1<Long>() {
+        @Override public void call(Long x) {
+            displayCount.setText("Count: " + x);
+        }
+    };
+
+    private final Action0 onCompleted = new Action0() {
+        @Override public void call() {
+            displayCount.setText(getString(R.string.select_button));
+        }
+    };
 }
