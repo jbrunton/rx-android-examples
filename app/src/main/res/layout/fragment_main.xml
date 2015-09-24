@@ -22,10 +22,10 @@
         android:text="Unsubscribe"/>
 
     <Button
-        android:id="@+id/action_retain"
+        android:id="@+id/action_persist_cache"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Unsubscribe and retain"/>
+        android:text="Persist with cache"/>
 
     <TextView
         android:id="@+id/display_count"
