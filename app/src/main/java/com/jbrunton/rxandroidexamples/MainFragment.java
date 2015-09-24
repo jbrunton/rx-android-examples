@@ -1,5 +1,6 @@
 package com.jbrunton.rxandroidexamples;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
@@ -33,19 +35,19 @@ public class MainFragment extends BaseFragment {
 
         view.findViewById(R.id.action_no_unsubscribe).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                countNoUnsubscribe();
+                ContainerActivity.start(getActivity(), NaiveFragment.class);
             }
         });
 
         view.findViewById(R.id.action_unsubscribe).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                countUnsubscribe();
+                ContainerActivity.start(getActivity(), UnsubscribeFragment.class);
             }
         });
 
         view.findViewById(R.id.action_retain).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                countRetain();
+                ContainerActivity.start(getActivity(), PersistCacheFragment.class);
             }
         });
 
