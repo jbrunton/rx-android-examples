@@ -1,25 +1,23 @@
 package com.jbrunton.rxandroidexamples;
 
-import android.widget.Toast;
-
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
 public class PersistCacheFragment extends TimerFragment {
-    private static Observable<Long> cachedObservable;
+    private static Observable<Long> cachedTimer;
 
     @Override public void onResume() {
         super.onResume();
 
-        if (cachedObservable == null) {
+        if (cachedTimer == null) {
             PublishSubject<Long> subject = PublishSubject.create();
             createTimer().subscribe(subject);
-            cachedObservable = subject;
+            cachedTimer = subject;
         }
 
-        cachedObservable
+        cachedTimer
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(this.<Long>bindToLifecycle())
@@ -30,7 +28,7 @@ public class PersistCacheFragment extends TimerFragment {
         super.onDestroy();
 
         if (getActivity().isFinishing()) {
-            cachedObservable = null;
+            cachedTimer = null;
         }
     }
 }
