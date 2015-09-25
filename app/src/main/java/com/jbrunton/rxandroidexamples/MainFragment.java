@@ -18,15 +18,6 @@ import rx.schedulers.Schedulers;
 import static rx.Observable.interval;
 
 public class MainFragment extends BaseFragment {
-    private TextView displayCount;
-    private static final String retainObservableId = "retain";
-
-    @Override public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        bind(this.<Long>fetch(retainObservableId), onTick, onCompleted);
-    }
-
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
@@ -49,44 +40,12 @@ public class MainFragment extends BaseFragment {
             }
         });
 
-        displayCount = (TextView) view.findViewById(R.id.display_count);
+        view.findViewById(R.id.action_persist_fragment).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                ContainerActivity.start(getActivity(), PersistRetainedFragment.class);
+            }
+        });
 
         return view;
     }
-
-    private void countNoUnsubscribe() {
-        displayCount.setText("Counting...");
-        createTimer()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(onCompleted)
-                .subscribe(onTick);
-    }
-
-    private void countUnsubscribe() {
-        displayCount.setText("Counting...");
-        bind(createTimer(), onTick, onCompleted);
-    }
-
-    private void countRetain() {
-        displayCount.setText("Counting...");
-        bind(cache(createTimer(), retainObservableId), onTick, onCompleted);
-    }
-
-    private Observable<Long> createTimer() {
-        return interval(1, TimeUnit.SECONDS)
-                .take(20);
-    }
-
-    private final Action1<Long> onTick = new Action1<Long>() {
-        @Override public void call(Long x) {
-            displayCount.setText("Count: " + x);
-        }
-    };
-
-    private final Action0 onCompleted = new Action0() {
-        @Override public void call() {
-            displayCount.setText(getString(R.string.select_button));
-        }
-    };
 }

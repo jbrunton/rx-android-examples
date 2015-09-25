@@ -22,7 +22,7 @@ public abstract class TimerFragment extends RxFragment {
         return inflater.inflate(R.layout.fragment_timer, container, false);
     }
 
-    protected Observable<Long> createTimer() {
+    protected static Observable<Long> createTimer() {
         return interval(1, TimeUnit.SECONDS);
     }
 

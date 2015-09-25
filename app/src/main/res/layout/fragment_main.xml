@@ -27,12 +27,10 @@
         android:layout_height="wrap_content"
         android:text="Persist with cache"/>
 
-    <TextView
-        android:id="@+id/display_count"
-        android:text="@string/select_button"
-        android:layout_marginTop="20px"
-        android:gravity="center"
+    <Button
+        android:id="@+id/action_persist_fragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="Persist with retained fragment"/>
 
 </LinearLayout>

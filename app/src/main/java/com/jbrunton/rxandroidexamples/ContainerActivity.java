@@ -17,6 +17,7 @@ public class ContainerActivity extends AppCompatActivity {
         put(NaiveFragment.class.getName(), NaiveFragment.class);
         put(UnsubscribeFragment.class.getName(), UnsubscribeFragment.class);
         put(PersistCacheFragment.class.getName(), PersistCacheFragment.class);
+        put(PersistRetainedFragment.class.getName(), PersistRetainedFragment.class);
     }};
 
     @Override protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +27,7 @@ public class ContainerActivity extends AppCompatActivity {
         try {
             Class<? extends Fragment> fragmentClass = FRAGMENT_TYPES.get(getIntent().getStringExtra(EXTRA_KEY));
             getFragmentManager().beginTransaction()
-                    .replace(R.id.container, fragmentClass.newInstance())
+                    .replace(R.id.container, fragmentClass.newInstance(), "container")
                     .commit();
         } catch (InstantiationException e) {
             e.printStackTrace();
