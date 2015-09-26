@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import java.util.concurrent.TimeUnit;
@@ -22,9 +23,29 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getFragmentManager().beginTransaction()
-                .replace(R.id.container, new MainFragment())
-                .commit();
+        findViewById(R.id.action_no_unsubscribe).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                ContainerActivity.start(MainActivity.this, NaiveFragment.class);
+            }
+        });
+
+        findViewById(R.id.action_unsubscribe).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                ContainerActivity.start(MainActivity.this, UnsubscribeFragment.class);
+            }
+        });
+
+        findViewById(R.id.action_persist_cache).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                ContainerActivity.start(MainActivity.this, PersistCacheFragment.class);
+            }
+        });
+
+        findViewById(R.id.action_persist_fragment).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                ContainerActivity.start(MainActivity.this, PersistRetainedFragment.class);
+            }
+        });
     }
 
     @Override
