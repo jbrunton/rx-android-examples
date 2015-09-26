@@ -5,14 +5,11 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
-import java.util.concurrent.TimeUnit;
-
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import com.jbrunton.rxandroidexamples.fragments.NaiveFragment;
+import com.jbrunton.rxandroidexamples.fragments.PersistCacheFragment;
+import com.jbrunton.rxandroidexamples.fragments.PersistRetainedFragment;
+import com.jbrunton.rxandroidexamples.fragments.UnsubscribeFragment;
 
 import static rx.Observable.interval;
 

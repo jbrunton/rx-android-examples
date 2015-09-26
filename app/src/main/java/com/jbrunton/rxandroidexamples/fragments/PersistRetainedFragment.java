@@ -1,9 +1,10 @@
-package com.jbrunton.rxandroidexamples;
+package com.jbrunton.rxandroidexamples.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
+
+import com.jbrunton.rxandroidexamples.TimerFragment;
 
 import rx.Observable;
 import rx.Subscription;

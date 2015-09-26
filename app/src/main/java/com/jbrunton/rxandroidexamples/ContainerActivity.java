@@ -1,12 +1,15 @@
 package com.jbrunton.rxandroidexamples;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
+
+import com.jbrunton.rxandroidexamples.fragments.NaiveFragment;
+import com.jbrunton.rxandroidexamples.fragments.PersistCacheFragment;
+import com.jbrunton.rxandroidexamples.fragments.PersistRetainedFragment;
+import com.jbrunton.rxandroidexamples.fragments.UnsubscribeFragment;
 
 import java.util.HashMap;
 import java.util.Map;
