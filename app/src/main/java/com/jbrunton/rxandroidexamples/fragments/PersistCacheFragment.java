@@ -17,7 +17,7 @@ public class PersistCacheFragment extends TimerFragment {
         if (cachedTimer == null) {
             // Using a ReplaySubject with a capacity of 1 gives us a hot observable that always
             // emits the previous value, so that we don't have to store state across config changes
-            // in the fragment.
+            // in the fragment. See: http://reactivex.io/documentation/subject.html
             ReplaySubject<Long> subject = ReplaySubject.create(1);
 
             createTimer().subscribe(subject);
