@@ -1,9 +1,9 @@
 package com.jbrunton.rxandroidexamples;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
 import com.jbrunton.rxandroidexamples.fragments.NaiveFragment;
@@ -29,8 +29,8 @@ public class ContainerActivity extends AppCompatActivity {
 
         try {
             Class<? extends Fragment> fragmentClass = FRAGMENT_TYPES.get(getIntent().getStringExtra(EXTRA_KEY));
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.container, fragmentClass.newInstance(), "container")
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, fragmentClass.newInstance())
                     .commit();
         } catch (InstantiationException e) {
             e.printStackTrace();
