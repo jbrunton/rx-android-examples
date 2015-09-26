@@ -14,19 +14,19 @@ import rx.subjects.PublishSubject;
 import rx.subjects.Subject;
 
 public class PersistRetainedFragment extends TimerFragment {
-    private Observable<Long> timer;
+    private static final String WORKER_TAG = Worker.class.getName();
 
     @Override public void onResume() {
         super.onResume();
 
         Worker frag = (Worker) getActivity()
                 .getFragmentManager()
-                .findFragmentByTag("worker");
+                .findFragmentByTag(WORKER_TAG);
 
         if (frag == null) {
             frag = new Worker();
             getActivity().getFragmentManager().beginTransaction()
-                    .add(frag, "worker")
+                    .add(frag, WORKER_TAG)
                     .commit();
         }
     }
